@@ -106,8 +106,8 @@
                     <div>
                         <label class="text-[10px] font-black text-gray-400 dark:text-teal-500 uppercase mb-2 block tracking-widest">KAMPUS SEÇİMİ</label>
                         <div class="grid grid-cols-2 gap-2">
-                            <button onclick="setCampus('nasimi')" id="btn-nasimi" class="campus-btn py-3 rounded-xl">Nəsimi</button>
-                            <button onclick="setCampus('genclik')" id="btn-genclik" class="campus-btn py-3 rounded-xl">Gənclik</button>
+                            <button onclick="setCampus('nəsimi')" id="btn-nəsimi" class="campus-btn py-3 rounded-xl">Nəsimi</button>
+                            <button onclick="setCampus('gənclik')" id="btn-gənclik" class="campus-btn py-3 rounded-xl">Gənclik</button>
                         </div>
                     </div>
 
@@ -315,12 +315,12 @@
 
     <script>
         const pricing = {
-            nasimi: [{n:"Məktəbəqədər", p:6715}, {n:"İbtidai", p:7691}, {n:"Orta", p:8847}, {n:"Lisey", p:8847}],
-            genclik: [{n:"Bağça", p:7832}, {n:"İbtidai (B)", p:9612}, {n:"Orta (B)", p:11057}, {n:"Lisey (B)", p:11057}]
+            nəsimi: [{n:"Məktəbəqədər", p:6715}, {n:"İbtidai", p:7691}, {n:"Orta", p:8847}, {n:"Lisey", p:8847}],
+            gənclik: [{n:"Bağça", p:7832}, {n:"İbtidai (B)", p:9612}, {n:"Orta (B)", p:11057}, {n:"Lisey (B)", p:11057}]
         };
 
         const months = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "İyun", "İyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"];
-        let currentCampus = 'nasimi';
+        let currentCampus = 'nəsimi';
         let lastCalculation = {};
 
         function toggleTheme() { document.documentElement.classList.toggle('dark'); }
@@ -342,8 +342,8 @@
 
         function setCampus(c) {
             currentCampus = c;
-            document.getElementById('btn-nasimi').className = c === 'nasimi' ? 'campus-btn py-3 rounded-xl active' : 'campus-btn py-3 rounded-xl';
-            document.getElementById('btn-genclik').className = c === 'genclik' ? 'campus-btn py-3 rounded-xl active' : 'campus-btn py-3 rounded-xl';
+            document.getElementById('btn-nəsimi').className = c === 'nəsimi' ? 'campus-btn py-3 rounded-xl active' : 'campus-btn py-3 rounded-xl';
+            document.getElementById('btn-gənclik').className = c === 'gənclik' ? 'campus-btn py-3 rounded-xl active' : 'campus-btn py-3 rounded-xl';
             const sel = document.getElementById('tuitionLevel');
             sel.innerHTML = '<option value="0">Səviyyəni seçin...</option>';
             pricing[c].forEach(x => {
@@ -515,7 +515,7 @@
             });
         }
 
-        window.onload = () => setCampus('nasimi');
+        window.onload = () => setCampus('nəsimi');
     </script>
 </body>
 </html>
