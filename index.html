@@ -2,84 +2,44 @@
 <html lang="az">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maarif Məktəbləri - Detallı Hesablama</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Maarif Məktəbləri - Təhsil Haqqı Hesablaması</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        :root { 
-            --maarif-navy: #00525d; 
-            --maarif-light: #f0fdfa;
-        }
-        body { font-family: 'Poppins', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        :root { --maarif-navy: #00525d; }
+        body { font-family: 'Poppins', sans-serif; transition: background-color 0.3s, color 0.3s; background-color: #f0fdfa; }
         .dark body { background-color: #020617; color: #f8fafc; }
         .dark .card { background-color: #0f172a; border-color: #1e293b; }
-        
-        select, input { 
-            background-color: #f8fafc; 
-            color: #1e293b !important; 
-            border: 1px solid #e2e8f0;
-        }
-        .dark select, .dark input { 
-            background-color: #1e293b; 
-            color: #ffffff !important; 
-            border-color: #334155; 
-        }
-
+        select, input { background-color: #f8fafc; color: #1e293b !important; border: 1px solid #e2e8f0; }
+        .dark select, .dark input { background-color: #1e293b; color: #ffffff !important; border-color: #334155; }
         .card { background: white; border-radius: 1.25rem; box-shadow: 0 10px 25px -5px rgba(0, 82, 93, 0.1); }
-        .bg-maarif { background-color: var(--maarif-navy); }
-        
-        .campus-btn { transition: all 0.2s; border: 1px solid #e2e8f0; font-size: 0.85rem; font-weight: 700; color: #64748b; }
+        .campus-btn { transition: all 0.2s; border: 1px solid #e2e8f0; font-size: 0.85rem; font-weight: 700; color: #64748b; cursor: pointer; }
         .campus-btn.active { border-color: var(--maarif-navy); background-color: var(--maarif-navy); color: white; }
-        
         .dark .campus-btn { border-color: #334155; color: #94a3b8; }
         .dark .campus-btn.active { background-color: #2dd4bf; border-color: #2dd4bf; color: #020617; }
-
-        #pdf-export-wrapper {
-            position: absolute;
-            top: -9999px;
-            left: 0;
-            width: 800px;
-            background: white;
-        }
-
-        .warning-text {
-            color: #ef4444 !important;
-            font-size: 9px;
-            font-weight: 800;
-            text-transform: uppercase;
-            margin-top: 6px;
-            display: none;
-        }
-        
-        .invoice-panel {
-            background-color: var(--maarif-navy);
-            color: white;
-        }
-
-        .installment-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0.5rem;
-            border-radius: 0.75rem;
-            text-align: center;
-        }
-
-        .discount-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.7);
-            padding: 2px 0;
-        }
+        #pdf-export-wrapper { position: absolute; top: -9999px; left: 0; width: 800px; background: white; }
+        .warning-text { color: #ef4444 !important; font-size: 9px; font-weight: 800; margin-top: 6px; display: none; }
+        .invoice-panel { background-color: var(--maarif-navy); color: white; }
+        .installment-card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.5rem; border-radius: 0.75rem; text-align: center; }
+        .discount-item { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255, 255, 255, 0.7); padding: 2px 0; }
+        .toggle-switch { position: relative; display: inline-block; width: 42px; height: 24px; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; border-radius: 24px; transition: 0.3s; }
+        .dark .toggle-slider { background-color: #334155; }
+        .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; border-radius: 50%; transition: 0.3s; }
+        .toggle-switch input:checked + .toggle-slider { background-color: #00525d; }
+        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(18px); }
+        .toggle-switch input:disabled + .toggle-slider { opacity: 0.4; cursor: not-allowed; }
+        .dark .toggle-switch input:checked + .toggle-slider { background-color: #2dd4bf; }
     </style>
 </head>
-<body class="bg-slate-50 py-6 px-4">
+<body class="py-6 px-4">
 
     <div class="max-w-4xl mx-auto flex justify-between items-center mb-8">
         <div class="flex flex-col">
-            <span id="currentDate" class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">-- --- ----</span>
+            <span id="currentDate" class="text-[11px] font-bold text-[#00525d] dark:text-teal-400 uppercase tracking-widest">-- --- ----</span>
             <span id="currentTime" class="text-sm font-black text-[#00525d] dark:text-teal-400">00:00:00</span>
         </div>
         <div class="flex gap-3">
@@ -101,21 +61,19 @@
 
         <div class="card p-6 md:p-8 border border-gray-100 dark:border-slate-800">
             <div class="grid lg:grid-cols-2 gap-10">
-                
+                <!-- SOL PANEL -->
                 <div class="space-y-6">
                     <div>
                         <label class="text-[10px] font-black text-gray-400 dark:text-teal-500 uppercase mb-2 block tracking-widest">KAMPUS SEÇİMİ</label>
                         <div class="grid grid-cols-2 gap-2">
-                            <button onclick="setCampus('nəsimi')" id="btn-nəsimi" class="campus-btn py-3 rounded-xl">Nəsimi</button>
+                            <button onclick="setCampus('nəsimi')" id="btn-nəsimi" class="campus-btn py-3 rounded-xl active">Nəsimi</button>
                             <button onclick="setCampus('gənclik')" id="btn-gənclik" class="campus-btn py-3 rounded-xl">Gənclik</button>
                         </div>
                     </div>
-
                     <div>
                         <label class="text-[10px] font-black text-gray-400 dark:text-teal-500 uppercase mb-2 block tracking-widest">TƏHSİL SƏVİYYƏSİ</label>
                         <select id="tuitionLevel" onchange="calculate()" class="w-full p-4 border rounded-xl font-bold text-sm outline-none"></select>
                     </div>
-
                     <div>
                         <label class="text-[10px] font-black text-gray-400 dark:text-teal-500 uppercase mb-2 block tracking-widest">ƏSAS ENDİRİM</label>
                         <select id="primaryDiscount" onchange="toggleExc(); calculate();" class="w-full p-4 border rounded-xl font-bold text-sm outline-none mb-2">
@@ -130,101 +88,67 @@
                         </select>
                         <input type="number" id="excPercent" placeholder="Faiz (%) daxil edin" min="0" max="100" class="hidden w-full p-4 border-2 border-teal-500/30 rounded-xl font-bold" oninput="validatePercent(this); calculate();">
                     </div>
-
                     <div class="grid grid-cols-2 gap-3">
-                        <div id="siblingPanel" class="flex flex-col p-4 bg-gray-50 dark:bg-slate-900/50 rounded-xl border border-transparent transition-all duration-300 relative">
-                            <label class="cursor-pointer flex items-center">
-                                <input type="checkbox" id="siblingDisc" onchange="calculate()" class="w-4 h-4 accent-teal-500">
-                                <span class="ml-2 text-[10px] font-black uppercase text-gray-700 dark:text-gray-200">Bacı-Qardaş</span>
-                            </label>
-                            <span id="siblingHint" class="text-gray-500 text-[9px] mt-2 leading-tight">10% Endirim</span>
+                        <div id="siblingPanel" class="flex flex-col p-4 rounded-xl border border-transparent transition-all duration-300 relative" style="background-color:#00525d;">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-black uppercase" style="color:#ffffff;">Bacı-Qardaş</span>
+                                <label class="toggle-switch"><input type="checkbox" id="siblingDisc" onchange="calculate()"><span class="toggle-slider"></span></label>
+                            </div>
+                            <span class="text-[9px] mt-2 leading-tight" style="color:rgba(255,255,255,0.7);">10% Endirim</span>
                             <span id="siblingWarning" class="warning-text">Bu endirimlə birgə tətbiq olunmur</span>
                         </div>
-
-                        <label class="flex flex-col p-4 bg-gray-50 dark:bg-slate-900/50 rounded-xl cursor-pointer border border-transparent hover:border-teal-500/20 transition-all">
-                            <div class="flex items-center">
-                                <input type="checkbox" id="fullPayDisc" onchange="calculate()" class="w-4 h-4 accent-teal-500">
-                                <span class="ml-2 text-[10px] font-black uppercase text-gray-700 dark:text-gray-200">Tam Ödəniş</span>
+                        <div class="flex flex-col p-4 rounded-xl border border-transparent hover:border-teal-500/20 transition-all" style="background-color:#00525d;">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-black uppercase" style="color:#ffffff;">Tam Ödəniş</span>
+                                <label class="toggle-switch"><input type="checkbox" id="fullPayDisc" onchange="calculate()"><span class="toggle-slider"></span></label>
                             </div>
-                            <span class="text-gray-500 text-[9px] mt-2 leading-tight">5% Endirim</span>
-                        </label>
-                    </div>
-
-                    <label class="flex items-center p-4 bg-teal-500/5 rounded-2xl border border-teal-500/10">
-                        <input type="checkbox" id="foodService" onchange="calculate()" checked class="w-4 h-4 accent-teal-500">
-                        <div class="ml-3 flex-grow flex justify-between items-center">
-                            <span class="text-[11px] font-black uppercase text-teal-600 dark:text-teal-400">Yemək Xidməti</span>
-                            <span class="text-[11px] font-black text-teal-700 dark:text-teal-300">1,375 AZN</span>
+                            <span class="text-[9px] mt-2 leading-tight" style="color:rgba(255,255,255,0.7);">5% Endirim</span>
                         </div>
-                    </label>
+                    </div>
+                    <div class="flex items-center p-4 bg-teal-500/5 rounded-2xl border border-teal-500/10">
+                        <div class="flex-grow flex justify-between items-center">
+                            <span class="text-[11px] font-black uppercase text-teal-600 dark:text-teal-400">Yemək Xidməti</span>
+                            <div class="flex items-center gap-3">
+                                <span class="text-[11px] font-black text-teal-700 dark:text-teal-300">1,375 AZN</span>
+                                <label class="toggle-switch"><input type="checkbox" id="foodService" onchange="calculate()" checked><span class="toggle-slider"></span></label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Sağ Panel - Hesab Faktura -->
+                <!-- SAĞ PANEL -->
                 <div class="invoice-panel rounded-2xl p-6 shadow-xl flex flex-col justify-between">
                     <div>
                         <h3 class="text-center text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-6 border-b border-white/10 pb-4">Hesab Faktura Detalları</h3>
-                        
                         <div class="space-y-4 mb-6">
-                            <div class="flex justify-between text-xs font-bold">
-                                <span class="text-white/50 uppercase">İlkin Təhsil Haqqı:</span>
-                                <span id="uiBase">0.00 AZN</span>
-                            </div>
-                            
-                            <!-- Endirim Detalları -->
-                            <div id="uiDiscountList" class="space-y-1 border-l-2 border-white/10 pl-3">
-                                <!-- Dinamik dolacaq -->
-                            </div>
-
-                            <div class="flex justify-between text-xs font-bold pt-4 border-t border-dashed border-white/10">
-                                <span class="text-white/40 uppercase font-black">Net Təhsil:</span>
-                                <span id="uiNet" class="text-teal-300">0.00 AZN</span>
-                            </div>
-                            <div class="flex justify-between text-xs font-bold">
-                                <span class="text-white/40 uppercase">Yemək Xidməti:</span>
-                                <span id="uiFood">0.00 AZN</span>
-                            </div>
+                            <div class="flex justify-between text-xs font-bold"><span class="text-white/50 uppercase">İlkin Təhsil Haqqı:</span><span id="uiBase">0 AZN</span></div>
+                            <div id="uiDiscountList" class="space-y-1 border-l-2 border-white/10 pl-3"></div>
+                            <div class="flex justify-between text-xs font-bold pt-4 border-t border-dashed border-white/10"><span class="text-white/40 uppercase font-black">Net Təhsil:</span><span id="uiNet" class="text-teal-300">0 AZN</span></div>
+                            <div class="flex justify-between text-xs font-bold"><span class="text-white/40 uppercase">Yemək Xidməti:</span><span id="uiFood">0 AZN</span></div>
                         </div>
-
                         <div class="bg-white/10 p-6 rounded-2xl text-center shadow-lg mb-8">
                             <p class="text-[8px] text-white/60 uppercase font-black mb-1 tracking-widest">YEKUN ÖDƏNİŞ MƏBLƏĞİ</p>
                             <h2 id="uiGrand" class="text-3xl font-black text-white">0 AZN</h2>
                         </div>
                     </div>
-
                     <div id="instPanel" class="space-y-3">
-                        <div class="flex items-center gap-2 mb-2">
-                            <div class="h-[1px] flex-grow bg-white/10"></div>
-                            <p class="text-[9px] font-black text-white/40 uppercase tracking-widest">Ödəniş Planı</p>
-                            <div class="h-[1px] flex-grow bg-white/10"></div>
-                        </div>
+                        <div class="flex items-center gap-2 mb-2"><div class="h-[1px] flex-grow bg-white/10"></div><p class="text-[9px] font-black text-white/40 uppercase tracking-widest">Ödəniş Planı (Hissəli)</p><div class="h-[1px] flex-grow bg-white/10"></div></div>
                         <div class="grid grid-cols-4 gap-2">
-                            <div class="installment-card">
-                                <p class="text-[6px] text-white/40 font-bold uppercase mb-1">1. Öd.</p>
-                                <p id="i1" class="text-[11px] font-black text-white">0</p>
-                            </div>
-                            <div class="installment-card">
-                                <p class="text-[6px] text-white/40 font-bold uppercase mb-1">2. Öd.</p>
-                                <p id="i2" class="text-[11px] font-black text-white">0</p>
-                            </div>
-                            <div class="installment-card">
-                                <p class="text-[6px] text-white/40 font-bold uppercase mb-1">3. Öd.</p>
-                                <p id="i3" class="text-[11px] font-black text-white">0</p>
-                            </div>
-                            <div class="installment-card bg-teal-500/20 border-teal-500/30">
-                                <p class="text-[6px] text-teal-400 font-bold uppercase mb-1">Qalıq</p>
-                                <p id="i4" class="text-[11px] font-black text-teal-300">0</p>
-                            </div>
+                            <div class="installment-card"><p class="text-[6px] text-white/40 font-bold uppercase mb-1">1-ci ÖDƏNİŞ</p><p id="i1" class="text-[11px] font-black text-white">0</p></div>
+                            <div class="installment-card"><p class="text-[6px] text-white/40 font-bold uppercase mb-1">2-ci ÖDƏNİŞ</p><p id="i2" class="text-[11px] font-black text-white">0</p></div>
+                            <div class="installment-card"><p class="text-[6px] text-white/40 font-bold uppercase mb-1">3-cü ÖDƏNİŞ</p><p id="i3" class="text-[11px] font-black text-white">0</p></div>
+                            <div class="installment-card bg-teal-500/20 border-teal-500/30"><p class="text-[6px] text-teal-400 font-bold uppercase mb-1">4-cü ÖDƏNİŞ</p><p id="i4" class="text-[11px] font-black text-teal-300">0</p></div>
                         </div>
-                        <p id="employeeNote" class="text-[7px] text-center text-white/30 italic hidden">* Əməkdaş ödənişində 1. ödəniş min. 1350 AZN-dir.</p>
+                        <p id="employeeNote" class="text-[7px] text-center text-white/30 italic hidden">* Əməkdaş endirimində ilk ödəniş minimum 1350 AZN, qalan məbləğ 3 bərabər hissəyə bölünür.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- PDF Modal -->
+    <!-- PDF MODAL -->
     <div id="pdfModal" class="fixed inset-0 bg-slate-900/80 hidden items-center justify-center p-4 z-50 backdrop-blur-md">
-        <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl w-full max-w-sm shadow-2xl text-center border border-gray-100 dark:border-slate-700">
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl w-full max-w-sm shadow-2xl text-center">
             <h3 class="text-gray-800 dark:text-white font-black mb-6 uppercase text-sm">ŞAGİRD MƏLUMATLARI</h3>
             <div class="space-y-4">
                 <input type="text" id="pdfNameInput" placeholder="Ad və Soyad" class="w-full p-4 border rounded-xl font-bold text-sm">
@@ -237,107 +161,44 @@
         </div>
     </div>
 
-    <!-- PDF Export Template (Hidden) -->
+    <!-- PDF Şablon -->
     <div id="pdf-export-wrapper">
         <div id="pdf-content" style="padding: 40px; background: white; width: 800px; box-sizing: border-box; color: black; font-family: 'Poppins', sans-serif;">
             <div style="display: table; width: 100%; border-bottom: 3px solid #00525d; padding-bottom: 20px; margin-bottom: 30px;">
-                <div style="display: table-cell; vertical-align: middle; width: 100px;">
-                    <img src="https://i.imgur.com/a3FuVV8.png" crossorigin="anonymous" style="width: 80px;">
-                </div>
-                <div style="display: table-cell; vertical-align: middle; text-align: left; padding-left: 20px;">
-                    <h1 style="color: #000; margin: 0; font-size: 20px; font-weight: 800; text-transform: uppercase; line-height: 1.2;">Azərbaycan Beynəlxalq<br>Maarif Məktəbləri</h1>
-                    <p style="color: #666; font-size: 10px; font-weight: 700; margin-top: 5px; letter-spacing: 2px;">2026-2027 TƏHSİL HAQQI HESABATI</p>
-                </div>
-                <div style="display: table-cell; vertical-align: middle; text-align: right;">
-                    <p style="color: #000; font-size: 11px; font-weight: 800; margin: 0; white-space: nowrap;" id="pDate">-- --- ----</p>
-                </div>
+                <div style="display: table-cell; vertical-align: middle; width: 100px;"><img src="https://i.imgur.com/a3FuVV8.png" style="width: 80px;"></div>
+                <div style="display: table-cell; vertical-align: middle; text-align: left; padding-left: 20px;"><h1 style="color:#000; font-size:20px; font-weight:800;">Azərbaycan Beynəlxalq<br>Maarif Məktəbləri</h1><p style="color:#666; font-size:10px; letter-spacing:2px;">2026-2027 TƏHSİL HAQQI HESABATI</p></div>
+                <div style="display: table-cell; vertical-align: middle; text-align: right;"><p id="pDate" style="color:#000; font-size:11px; font-weight:800;">-- --- ----</p></div>
             </div>
-
-            <div style="margin-bottom: 30px; background: #fcfcfc; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr>
-                        <td style="width: 45%; padding: 5px 0;">
-                            <span style="font-size: 9px; color: #888; text-transform: uppercase; font-weight: 700; display: block;">Şagird:</span>
-                            <span style="font-size: 13px; font-weight: 800; color: #000;" id="pName">---</span>
-                        </td>
-                        <td style="width: 25%; padding: 5px 0;">
-                            <span style="font-size: 9px; color: #888; text-transform: uppercase; font-weight: 700; display: block;">Sinif:</span>
-                            <span style="font-size: 13px; font-weight: 800; color: #000;" id="pClass">---</span>
-                        </td>
-                        <td style="width: 30%; padding: 5px 0; text-align: right;">
-                            <span style="font-size: 9px; color: #888; text-transform: uppercase; font-weight: 700; display: block;">Kampus:</span>
-                            <span style="font-size: 13px; font-weight: 800; color: #000;" id="pCampus">---</span>
-                        </td>
-                    </tr>
-                </table>
+            <div style="margin-bottom:30px; background:#fcfcfc; padding:20px; border:1px solid #eee; border-radius:10px;">
+                <table style="width:100%"><tr><td style="width:45%"><span style="font-size:9px; color:#888;">ŞAGİRD:</span><br><span id="pName" style="font-size:13px; font-weight:800;">---</span></td><td style="width:25%"><span style="font-size:9px; color:#888;">SİNİF:</span><br><span id="pClass" style="font-size:13px; font-weight:800;">---</span></td><td style="text-align:right"><span style="font-size:9px; color:#888;">KAMPUS:</span><br><span id="pCampus" style="font-size:13px; font-weight:800;">---</span></td></tr></table>
             </div>
-
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-                <thead>
-                    <tr style="background: #00525d;">
-                        <th style="padding: 12px 15px; text-align: left; color: white; font-size: 11px; text-transform: uppercase;">Xidmət və Güzəştlər</th>
-                        <th style="padding: 12px 15px; text-align: right; color: white; font-size: 11px; text-transform: uppercase;">Məbləğ</th>
-                    </tr>
-                </thead>
-                <tbody id="pTableBody" style="font-size: 12px; color: #000;">
-                    <!-- JS tərəfindən dolacaq -->
-                </tbody>
-            </table>
-
-            <div id="pInstBox" style="padding: 25px; border: 1px solid #00525d; border-radius: 15px; background: #fafafa; margin-top: 20px;">
-                <p style="text-align: center; font-size: 10px; font-weight: 900; color: #00525d; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 1px;">Ödəniş Mərhələləri (İlkin + 3 Hissə)</p>
-                <div style="display: table; width: 100%;">
-                    <div style="display: table-cell; width: 25%; text-align: center; border-right: 1px solid #eee;">
-                        <p style="font-size: 8px; color: #666; font-weight: 700; margin-bottom: 5px; text-transform: uppercase;">1. Ödəniş</p>
-                        <p id="pi1" style="font-size: 15px; font-weight: 800; color: #000;">0</p>
-                    </div>
-                    <div style="display: table-cell; width: 25%; text-align: center; border-right: 1px solid #eee;">
-                        <p style="font-size: 8px; color: #666; font-weight: 700; margin-bottom: 5px; text-transform: uppercase;">2. Ödəniş</p>
-                        <p id="pi2" style="font-size: 15px; font-weight: 800; color: #000;">0</p>
-                    </div>
-                    <div style="display: table-cell; width: 25%; text-align: center; border-right: 1px solid #eee;">
-                        <p style="font-size: 8px; color: #666; font-weight: 700; margin-bottom: 5px; text-transform: uppercase;">3. Ödəniş</p>
-                        <p id="pi3" style="font-size: 15px; font-weight: 800; color: #000;">0</p>
-                    </div>
-                    <div style="display: table-cell; width: 25%; text-align: center; background: #f0f7f8; border-radius: 0 10px 10px 0;">
-                        <p style="font-size: 8px; color: #00525d; font-weight: 900; margin-bottom: 5px; text-transform: uppercase;">Qalıq</p>
-                        <p id="pi4" style="font-size: 15px; font-weight: 800; color: #00525d;">0</p>
-                    </div>
+            <table style="width:100%; border-collapse:collapse; margin-bottom:20px;"><thead><tr style="background:#00525d;"><th style="padding:12px; text-align:left; color:white;">XİDMƏT VƏ GÜZƏŞTLƏR</th><th style="padding:12px; text-align:right; color:white;">MƏBLƏĞ</th></tr></thead><tbody id="pTableBody"></tbody></table>
+            <div id="pInstBox" style="padding:25px; border:1px solid #00525d; border-radius:15px; background:#fafafa; margin-top:20px;">
+                <p style="text-align:center; font-size:10px; font-weight:900; color:#00525d; margin-bottom:20px;">ÖDƏNİŞ MƏRHƏLƏLƏRİ</p>
+                <div style="display:table; width:100%;">
+                    <div style="display:table-cell; width:25%; text-align:center;"><p style="font-size:8px; color:#666;">1. ÖDƏNİŞ</p><p id="pi1" style="font-size:15px; font-weight:800;">0</p></div>
+                    <div style="display:table-cell; width:25%; text-align:center;"><p style="font-size:8px; color:#666;">2. ÖDƏNİŞ</p><p id="pi2" style="font-size:15px; font-weight:800;">0</p></div>
+                    <div style="display:table-cell; width:25%; text-align:center;"><p style="font-size:8px; color:#666;">3. ÖDƏNİŞ</p><p id="pi3" style="font-size:15px; font-weight:800;">0</p></div>
+                    <div style="display:table-cell; width:25%; text-align:center; background:#f0f7f8;"><p style="font-size:8px; color:#00525d; font-weight:900;">4. ÖDƏNİŞ</p><p id="pi4" style="font-size:15px; font-weight:800; color:#00525d;">0</p></div>
                 </div>
             </div>
-
-            <div style="margin-top: 40px; text-align: center; color: #999; font-size: 9px; font-weight: 600;">
-                <p>Bu sənəd məlumatlandırma xarakteri daşıyır və rəsmi öhdəlik yaratmır.</p>
-                <p style="margin-top: 4px;">© 2026 Azerbaijan International Maarif Schools</p>
-            </div>
+            <div style="margin-top:40px; text-align:center; color:#999; font-size:9px;"><p>Bu sənəd məlumatlandırma xarakteri daşıyır.</p><p>© 2026 Azerbaijan International Maarif Schools</p></div>
         </div>
     </div>
 
     <script>
         const pricing = {
             nəsimi: [{n:"Məktəbəqədər", p:6715}, {n:"İbtidai", p:7691}, {n:"Orta", p:8847}, {n:"Lisey", p:8847}],
-            gənclik: [{n:"Bağça", p:7832}, {n:"İbtidai (B)", p:9612}, {n:"Orta (B)", p:11057}, {n:"Lisey (B)", p:11057}]
+            gənclik: [{n:"Məktəbəqədər", p:7832}, {n:"İbtidai", p:9612}, {n:"Orta", p:11057}, {n:"Lisey", p:11057}]
         };
-
         const months = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "İyun", "İyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"];
         let currentCampus = 'nəsimi';
-        let lastCalculation = {};
+        let lastCalculation = { base:0, discounts:[], currentVal:0, food:0, grandTotal:0, installments:{i1:0,i2:0,i3:0,i4:0}, campus:'nəsimi', levelName:'', fullPayActive:false, isEmployee:false };
 
         function toggleTheme() { document.documentElement.classList.toggle('dark'); }
-        function toggleExc() { 
-            const isExc = document.getElementById('primaryDiscount').value === 'exceptional';
-            document.getElementById('excPercent').classList.toggle('hidden', !isExc); 
-        }
-        function validatePercent(input) {
-            if (input.value > 100) input.value = 100;
-            if (input.value < 0) input.value = 0;
-        }
-
-        function updateTime() {
-            const now = new Date();
-            document.getElementById('currentDate').innerText = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-            document.getElementById('currentTime').innerText = now.toLocaleTimeString('az-AZ');
-        }
+        function toggleExc() { const isExc = document.getElementById('primaryDiscount').value === 'exceptional'; document.getElementById('excPercent').classList.toggle('hidden', !isExc); }
+        function validatePercent(input) { if (input.value > 100) input.value = 100; if (input.value < 0) input.value = 0; }
+        function updateTime() { const now = new Date(); document.getElementById('currentDate').innerText = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`; document.getElementById('currentTime').innerText = now.toLocaleTimeString('az-AZ'); }
         setInterval(updateTime, 1000); updateTime();
 
         function setCampus(c) {
@@ -346,23 +207,54 @@
             document.getElementById('btn-gənclik').className = c === 'gənclik' ? 'campus-btn py-3 rounded-xl active' : 'campus-btn py-3 rounded-xl';
             const sel = document.getElementById('tuitionLevel');
             sel.innerHTML = '<option value="0">Səviyyəni seçin...</option>';
-            pricing[c].forEach(x => {
-                let op = document.createElement('option');
-                op.value = x.p; op.textContent = `${x.n} (${x.p} AZN)`;
-                sel.appendChild(op);
-            });
+            pricing[c].forEach(x => { let op = document.createElement('option'); op.value = x.p; op.textContent = `${x.n} (${x.p} AZN)`; sel.appendChild(op); });
             calculate();
+        }
+
+        // Adi hissə bölgüsü: 4 hissə, tam manat, ilk ödənişlər böyük
+        function computeStandardInstallments(totalManat) {
+            if (totalManat <= 0) return { i1:0, i2:0, i3:0, i4:0 };
+            let total = Math.floor(totalManat);
+            let baseShare = Math.floor(total / 4);
+            let remainder = total % 4;
+            let parts = [baseShare, baseShare, baseShare, baseShare];
+            for (let i = 0; i < remainder; i++) parts[i] += 1;
+            return { i1: parts[0], i2: parts[1], i3: parts[2], i4: parts[3] };
+        }
+
+        // Əməkdaş xüsusi qaydası: ilk ödəniş minimum 1350 AZN, qalan 3 hissəyə bölünür
+        function computeEmployeeInstallments(totalManat) {
+            if (totalManat <= 0) return { i1:0, i2:0, i3:0, i4:0 };
+            let total = Math.floor(totalManat);
+            const MIN_FIRST = 1350;
+            
+            // Əgər cəmi 1350-dən azdırsa, hamısı ilk ödəniş
+            if (total <= MIN_FIRST) {
+                return { i1: total, i2: 0, i3: 0, i4: 0 };
+            }
+            
+            let first = MIN_FIRST;
+            let remaining = total - MIN_FIRST;
+            // Qalan məbləği 3 hissəyə böl (tam manat, ilk qalıq hissəyə)
+            let share = Math.floor(remaining / 3);
+            let rem = remaining % 3;
+            let parts = [share, share, share];
+            for (let i = 0; i < rem; i++) parts[i] += 1;
+            
+            return { i1: first, i2: parts[0], i3: parts[1], i4: parts[2] };
         }
 
         function calculate() {
             const base = parseFloat(document.getElementById('tuitionLevel').value) || 0;
+            const selLevel = document.getElementById('tuitionLevel');
+            let levelName = (selLevel.selectedIndex >= 0 && selLevel.value != "0") ? selLevel.options[selLevel.selectedIndex].text.split('(')[0].trim() : "Seçilməyib";
             const primarySel = document.getElementById('primaryDiscount');
             const primaryText = primarySel.options[primarySel.selectedIndex].text.split('-')[0].trim();
             let pPct = primarySel.value === 'exceptional' ? (parseFloat(document.getElementById('excPercent').value) || 0) : parseFloat(primarySel.value);
-            
             const sibCheck = document.getElementById('siblingDisc');
             const fullPayCheck = document.getElementById('fullPayDisc');
-            const isBlocked = primarySel.value === "25";
+            const isBlocked = (primarySel.value === "25");
+            const isEmployee = (primarySel.value === "75" || primarySel.value === "50");
             
             if (isBlocked) {
                 sibCheck.checked = false; sibCheck.disabled = true;
@@ -375,146 +267,87 @@
 
             let currentVal = base;
             let discounts = [];
-
-            // 1. Əsas Endirim
-            if (pPct > 0) {
-                let amt = base * (pPct / 100);
-                discounts.push({ name: primaryText + ` (${pPct}%)`, amount: amt });
-                currentVal -= amt;
-            }
-
-            // 2. Bacı-Qardaş (Qalıq üzərindən)
-            if (sibCheck.checked && !isBlocked) {
-                let amt = currentVal * 0.10;
-                discounts.push({ name: "Bacı-Qardaş Güzəşti (10%)", amount: amt });
-                currentVal -= amt;
-            }
-
-            // 3. Tam Ödəniş (Qalıq üzərindən)
-            if (fullPayCheck.checked) {
-                let amt = currentVal * 0.05;
-                discounts.push({ name: "Tam Ödəniş Güzəşti (5%)", amount: amt });
-                currentVal -= amt;
-            }
-
-            const food = document.getElementById('foodService').checked ? 1375 : 0;
-            const grandTotal = Math.round(currentVal + food);
-
-            // UI Yeniləmə
-            const f = (n) => n.toLocaleString('az-AZ', {minimumFractionDigits:2}) + " AZN";
-            document.getElementById('uiBase').innerText = f(base);
+            if (pPct > 0) { let amt = base * (pPct / 100); discounts.push({ name: primaryText + ` (${pPct}%)`, amount: amt }); currentVal -= amt; }
+            if (sibCheck.checked && !isBlocked) { let amt = currentVal * 0.10; discounts.push({ name: "Bacı-Qardaş Güzəşti (10%)", amount: amt }); currentVal -= amt; }
+            if (fullPayCheck.checked) { let amt = currentVal * 0.05; discounts.push({ name: "Tam Ödəniş Güzəşti (5%)", amount: amt }); currentVal -= amt; }
             
+            const food = document.getElementById('foodService').checked ? 1375 : 0;
+            let grandTotal = currentVal + food;
+            grandTotal = Math.round(grandTotal); // tam manat
+            
+            // UI Yeniləmə
+            document.getElementById('uiBase').innerText = Math.round(base).toLocaleString('az-AZ') + " AZN";
             const discListUI = document.getElementById('uiDiscountList');
             discListUI.innerHTML = '';
-            discounts.forEach(d => {
-                discListUI.innerHTML += `<div class="discount-item"><span>${d.name}:</span><span>-${f(d.amount)}</span></div>`;
+            if(discounts.length === 0) discListUI.innerHTML = '<div class="text-[9px] text-white/30 italic">Heç bir endirim yoxdur</div>';
+            discounts.forEach(d => { 
+                let amtRounded = Math.round(d.amount);
+                discListUI.innerHTML += `<div class="discount-item"><span>${d.name}:</span><span>-${amtRounded} AZN</span></div>`; 
             });
-
-            document.getElementById('uiNet').innerText = f(currentVal);
-            document.getElementById('uiFood').innerText = f(food);
+            let netTəhsil = Math.round(currentVal);
+            document.getElementById('uiNet').innerText = netTəhsil.toLocaleString('az-AZ') + " AZN";
+            document.getElementById('uiFood').innerText = food.toLocaleString('az-AZ') + " AZN";
             document.getElementById('uiGrand').innerText = grandTotal.toLocaleString('az-AZ') + " AZN";
-
-            // Hissəli Plan
+            
             const instPanel = document.getElementById('instPanel');
-            const isEmployee = (primarySel.value === "75" || primarySel.value === "50");
-            document.getElementById('employeeNote').classList.toggle('hidden', !isEmployee);
-
             let installments = { i1:0, i2:0, i3:0, i4:0 };
-
+            
             if (!fullPayCheck.checked && grandTotal > 0) {
                 instPanel.classList.remove('hidden');
                 if (isEmployee) {
-                    if (grandTotal <= 1350) { installments.i1 = grandTotal; } 
-                    else {
-                        installments.i1 = 1350;
-                        let rem = grandTotal - 1350;
-                        installments.i2 = Math.floor(rem / 3);
-                        installments.i3 = Math.floor(rem / 3);
-                        installments.i4 = rem - (installments.i2 + installments.i3);
-                    }
+                    installments = computeEmployeeInstallments(grandTotal);
                 } else {
-                    installments.i1 = Math.ceil(grandTotal / 4);
-                    let rem = grandTotal - installments.i1;
-                    installments.i2 = Math.floor(rem / 3);
-                    installments.i3 = Math.floor(rem / 3);
-                    installments.i4 = rem - (installments.i2 + installments.i3);
+                    installments = computeStandardInstallments(grandTotal);
                 }
-                document.getElementById('i1').innerText = installments.i1.toLocaleString('az-AZ');
-                document.getElementById('i2').innerText = installments.i2.toLocaleString('az-AZ');
-                document.getElementById('i3').innerText = installments.i3.toLocaleString('az-AZ');
-                document.getElementById('i4').innerText = installments.i4.toLocaleString('az-AZ');
+                document.getElementById('i1').innerText = installments.i1.toLocaleString('az-AZ') + " AZN";
+                document.getElementById('i2').innerText = installments.i2.toLocaleString('az-AZ') + " AZN";
+                document.getElementById('i3').innerText = installments.i3.toLocaleString('az-AZ') + " AZN";
+                document.getElementById('i4').innerText = installments.i4.toLocaleString('az-AZ') + " AZN";
             } else {
                 instPanel.classList.add('hidden');
             }
-
-            lastCalculation = { base, discounts, currentVal, food, grandTotal, installments, campus: currentCampus, level: document.getElementById('tuitionLevel').options[document.getElementById('tuitionLevel').selectedIndex].text.split('(')[0].trim() };
+            
+            document.getElementById('employeeNote').classList.toggle('hidden', !isEmployee);
+            
+            lastCalculation = { base, discounts, currentVal: netTəhsil, food, grandTotal, installments, campus: currentCampus, levelName, fullPayActive: fullPayCheck.checked, isEmployee };
         }
-
+        
         function openPdfModal() { document.getElementById('pdfModal').style.display = 'flex'; }
         function closePdfModal() { document.getElementById('pdfModal').style.display = 'none'; }
-
+        
         function generatePdf() {
             const btn = document.getElementById('pdfDownloadBtn');
             const nameInput = document.getElementById('pdfNameInput').value || "Məlum Deyil";
             const classInput = document.getElementById('pdfClassInput').value || "Məlum Deyil";
             btn.disabled = true; btn.innerText = "HAZIRLANIR...";
-
-            const f = (n) => n.toLocaleString('az-AZ', {minimumFractionDigits:2}) + " AZN";
             
-            document.getElementById('pName').innerText = nameInput;
+            document.getElementById('pName').innerText = nameInput; 
             document.getElementById('pClass').innerText = classInput;
-            document.getElementById('pCampus').innerText = lastCalculation.campus.toUpperCase();
+            document.getElementById('pCampus').innerText = lastCalculation.campus === 'nəsimi' ? 'NƏSİMİ' : 'GƏNCLİK';
             document.getElementById('pDate').innerText = document.getElementById('currentDate').innerText;
-
+            
             const tbody = document.getElementById('pTableBody');
-            tbody.innerHTML = `
-                <tr>
-                    <td style="padding: 12px 15px; border-bottom: 1px solid #eee; font-weight: 600;">İllik Təhsil Haqqı (${lastCalculation.level})</td>
-                    <td style="padding: 12px 15px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700;">${f(lastCalculation.base)}</td>
-                </tr>
-            `;
-
-            lastCalculation.discounts.forEach(d => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="padding: 10px 15px; border-bottom: 1px solid #eee; font-size: 11px; color: #d00; font-weight: 600;">└ ${d.name}</td>
-                        <td style="padding: 10px 15px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700; color: #d00;">-${f(d.amount)}</td>
-                    </tr>
-                `;
+            tbody.innerHTML = `<tr><td style="padding:12px; border-bottom:1px solid #eee; font-weight:600;">İllik Təhsil Haqqı (${lastCalculation.levelName})</td><td style="padding:12px; text-align:right; font-weight:700;">${Math.round(lastCalculation.base)} AZN</td></tr>`;
+            lastCalculation.discounts.forEach(d => { 
+                let amtRounded = Math.round(d.amount);
+                tbody.innerHTML += `<tr><td style="padding:10px; font-size:11px; color:#d00;">└ ${d.name}</td><td style="padding:10px; text-align:right; color:#d00;">-${amtRounded} AZN</td></tr>`; 
             });
-
-            tbody.innerHTML += `
-                <tr>
-                    <td style="padding: 12px 15px; border-bottom: 1px solid #eee; font-weight: 600;">Yemək Xidməti (İllik)</td>
-                    <td style="padding: 12px 15px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700;">${f(lastCalculation.food)}</td>
-                </tr>
-                <tr style="background: #f8f8f8;">
-                    <td style="padding: 15px; font-size: 14px; font-weight: 900; text-transform: uppercase; color: #00525d;">Yekun Ödəniş</td>
-                    <td style="padding: 15px; text-align: right; font-size: 20px; font-weight: 900; color: #00525d;">${lastCalculation.grandTotal.toLocaleString('az-AZ')} AZN</td>
-                </tr>
-            `;
-
+            tbody.innerHTML += `<tr><td style="padding:12px;">Yemək Xidməti (İllik)</td><td style="text-align:right;">${lastCalculation.food} AZN</td></tr>
+            <tr style="background:#f8f8f8;"><td style="padding:15px; font-weight:900; color:#00525d;">YEKUN ÖDƏNİŞ</td><td style="padding:15px; text-align:right; font-size:20px; font-weight:900; color:#00525d;">${lastCalculation.grandTotal} AZN</td></tr>`;
+            
             const pInstBox = document.getElementById('pInstBox');
-            if (!document.getElementById('instPanel').classList.contains('hidden')) {
+            if (!lastCalculation.fullPayActive && lastCalculation.grandTotal > 0) {
                 pInstBox.style.display = 'block';
-                document.getElementById('pi1').innerText = lastCalculation.installments.i1.toLocaleString('az-AZ') + " AZN";
-                document.getElementById('pi2').innerText = lastCalculation.installments.i2.toLocaleString('az-AZ') + " AZN";
-                document.getElementById('pi3').innerText = lastCalculation.installments.i3.toLocaleString('az-AZ') + " AZN";
-                document.getElementById('pi4').innerText = lastCalculation.installments.i4.toLocaleString('az-AZ') + " AZN";
+                const inst = lastCalculation.installments;
+                document.getElementById('pi1').innerText = inst.i1 + " AZN";
+                document.getElementById('pi2').innerText = inst.i2 + " AZN";
+                document.getElementById('pi3').innerText = inst.i3 + " AZN";
+                document.getElementById('pi4').innerText = inst.i4 + " AZN";
             } else { pInstBox.style.display = 'none'; }
-
+            
             const element = document.getElementById('pdf-content');
-            html2pdf().from(element).set({
-                margin: 0,
-                filename: `Maarif_Hesabat_${nameInput}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
-            }).save().then(() => {
-                btn.disabled = false; btn.innerText = "YÜKLƏ"; closePdfModal();
-            });
+            html2pdf().from(element).set({ margin: 0.5, filename: `Maarif_Hesabat_${nameInput}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).save().then(() => { btn.disabled = false; btn.innerText = "YÜKLƏ"; closePdfModal(); }).catch(() => { btn.disabled = false; btn.innerText = "YÜKLƏ"; });
         }
-
         window.onload = () => setCampus('nəsimi');
     </script>
 </body>
