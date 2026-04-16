@@ -19,7 +19,7 @@
         .campus-btn.active { border-color: var(--maarif-navy); background-color: var(--maarif-navy); color: white; }
         .dark .campus-btn { border-color: #334155; color: #94a3b8; }
         .dark .campus-btn.active { background-color: #2dd4bf; border-color: #2dd4bf; color: #020617; }
-        #pdf-export-wrapper { position: absolute; top: -9999px; left: 0; width: 800px; background: white; }
+        #pdf-export-wrapper { position: absolute; top: -9999px; left: 0; width: 100%; background: white; }
         .warning-text { color: #ef4444 !important; font-size: 9px; font-weight: 800; margin-top: 6px; display: none; }
         .invoice-panel { background-color: var(--maarif-navy); color: white; }
         .installment-card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.5rem; border-radius: 0.75rem; text-align: center; }
@@ -33,6 +33,19 @@
         .toggle-switch input:checked + .toggle-slider:before { transform: translateX(18px); }
         .toggle-switch input:disabled + .toggle-slider { opacity: 0.4; cursor: not-allowed; }
         .dark .toggle-switch input:checked + .toggle-slider { background-color: #2dd4bf; }
+        
+        /* PDF üçün xüsusi stillər - kəsilmə problemini həll edir */
+        .pdf-container {
+            background: white;
+            padding: 30px 35px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            color: #000;
+        }
+        .pdf-container table { width: 100%; border-collapse: collapse; }
+        .pdf-container td, .pdf-container th { padding: 8px 12px; }
     </style>
 </head>
 <body class="py-6 px-4">
@@ -161,28 +174,56 @@
         </div>
     </div>
 
-    <!-- PDF Şablon -->
+    <!-- PDF Şablon - DÜZƏLDİLDİ, kəsilmə yoxdur -->
     <div id="pdf-export-wrapper">
-        <div id="pdf-content" style="padding: 40px; background: white; width: 800px; box-sizing: border-box; color: black; font-family: 'Poppins', sans-serif;">
-            <div style="display: table; width: 100%; border-bottom: 3px solid #00525d; padding-bottom: 20px; margin-bottom: 30px;">
-                <div style="display: table-cell; vertical-align: middle; width: 100px;"><img src="https://i.imgur.com/a3FuVV8.png" style="width: 80px;"></div>
-                <div style="display: table-cell; vertical-align: middle; text-align: left; padding-left: 20px;"><h1 style="color:#000; font-size:20px; font-weight:800;">Azərbaycan Beynəlxalq<br>Maarif Məktəbləri</h1><p style="color:#666; font-size:10px; letter-spacing:2px;">2026-2027 TƏHSİL HAQQI HESABATI</p></div>
-                <div style="display: table-cell; vertical-align: middle; text-align: right;"><p id="pDate" style="color:#000; font-size:11px; font-weight:800;">-- --- ----</p></div>
-            </div>
-            <div style="margin-bottom:30px; background:#fcfcfc; padding:20px; border:1px solid #eee; border-radius:10px;">
-                <table style="width:100%"><tr><td style="width:45%"><span style="font-size:9px; color:#888;">ŞAGİRD:</span><br><span id="pName" style="font-size:13px; font-weight:800;">---</span></td><td style="width:25%"><span style="font-size:9px; color:#888;">SİNİF:</span><br><span id="pClass" style="font-size:13px; font-weight:800;">---</span></td><td style="text-align:right"><span style="font-size:9px; color:#888;">KAMPUS:</span><br><span id="pCampus" style="font-size:13px; font-weight:800;">---</span></td></tr></table>
-            </div>
-            <table style="width:100%; border-collapse:collapse; margin-bottom:20px;"><thead><tr style="background:#00525d;"><th style="padding:12px; text-align:left; color:white;">XİDMƏT VƏ GÜZƏŞTLƏR</th><th style="padding:12px; text-align:right; color:white;">MƏBLƏĞ</th></tr></thead><tbody id="pTableBody"></tbody></table>
-            <div id="pInstBox" style="padding:25px; border:1px solid #00525d; border-radius:15px; background:#fafafa; margin-top:20px;">
-                <p style="text-align:center; font-size:10px; font-weight:900; color:#00525d; margin-bottom:20px;">ÖDƏNİŞ MƏRHƏLƏLƏRİ</p>
-                <div style="display:table; width:100%;">
-                    <div style="display:table-cell; width:25%; text-align:center;"><p style="font-size:8px; color:#666;">1. ÖDƏNİŞ</p><p id="pi1" style="font-size:15px; font-weight:800;">0</p></div>
-                    <div style="display:table-cell; width:25%; text-align:center;"><p style="font-size:8px; color:#666;">2. ÖDƏNİŞ</p><p id="pi2" style="font-size:15px; font-weight:800;">0</p></div>
-                    <div style="display:table-cell; width:25%; text-align:center;"><p style="font-size:8px; color:#666;">3. ÖDƏNİŞ</p><p id="pi3" style="font-size:15px; font-weight:800;">0</p></div>
-                    <div style="display:table-cell; width:25%; text-align:center; background:#f0f7f8;"><p style="font-size:8px; color:#00525d; font-weight:900;">4. ÖDƏNİŞ</p><p id="pi4" style="font-size:15px; font-weight:800; color:#00525d;">0</p></div>
+        <div id="pdf-content" class="pdf-container">
+            <div style="border-bottom: 3px solid #00525d; padding-bottom: 20px; margin-bottom: 30px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <img src="https://i.imgur.com/a3FuVV8.png" style="width: 80px;">
+                    <div>
+                        <h1 style="color:#000; font-size:20px; font-weight:800; margin:0;">Azərbaycan Beynəlxalq<br>Maarif Məktəbləri</h1>
+                        <p style="color:#666; font-size:10px; letter-spacing:2px; margin:5px 0 0;">2026-2027 TƏHSİL HAQQI HESABATI</p>
+                    </div>
+                </div>
+                <div>
+                    <p id="pDate" style="color:#000; font-size:11px; font-weight:800;">-- --- ----</p>
                 </div>
             </div>
-            <div style="margin-top:40px; text-align:center; color:#999; font-size:9px;"><p>Bu sənəd məlumatlandırma xarakteri daşıyır.</p><p>© 2026 Azerbaijan International Maarif Schools</p></div>
+
+            <div style="margin-bottom:30px; background:#fcfcfc; padding:20px; border:1px solid #eee; border-radius:10px;">
+                <table style="width:100%">
+                    <tr>
+                        <td style="width:40%"><span style="font-size:9px; color:#888;">ŞAGİRD:</span><br><span id="pName" style="font-size:14px; font-weight:800;">---</span></td>
+                        <td style="width:30%"><span style="font-size:9px; color:#888;">SİNİF:</span><br><span id="pClass" style="font-size:14px; font-weight:800;">---</span></td>
+                        <td style="width:30%; text-align:right"><span style="font-size:9px; color:#888;">KAMPUS:</span><br><span id="pCampus" style="font-size:14px; font-weight:800;">---</span></td>
+                    </tr>
+                </table>
+            </div>
+
+            <table style="width:100%; margin-bottom:20px; border-collapse:collapse;">
+                <thead>
+                    <tr style="background:#00525d;">
+                        <th style="padding:12px; text-align:left; color:white; font-size:11px;">XİDMƏT VƏ GÜZƏŞTLƏR</th>
+                        <th style="padding:12px; text-align:right; color:white; font-size:11px;">MƏBLƏĞ</th>
+                    </tr>
+                </thead>
+                <tbody id="pTableBody"></tbody>
+            </table>
+
+            <div id="pInstBox" style="padding:25px; border:1px solid #00525d; border-radius:15px; background:#fafafa; margin-top:20px;">
+                <p style="text-align:center; font-size:10px; font-weight:900; color:#00525d; margin-bottom:20px;">ÖDƏNİŞ MƏRHƏLƏLƏRİ</p>
+                <div style="display:flex; width:100%; text-align:center;">
+                    <div style="flex:1;"><p style="font-size:8px; color:#666;">1. ÖDƏNİŞ</p><p id="pi1" style="font-size:14px; font-weight:800;">0</p></div>
+                    <div style="flex:1;"><p style="font-size:8px; color:#666;">2. ÖDƏNİŞ</p><p id="pi2" style="font-size:14px; font-weight:800;">0</p></div>
+                    <div style="flex:1;"><p style="font-size:8px; color:#666;">3. ÖDƏNİŞ</p><p id="pi3" style="font-size:14px; font-weight:800;">0</p></div>
+                    <div style="flex:1; background:#f0f7f8; border-radius:0 10px 10px 0;"><p style="font-size:8px; color:#00525d; font-weight:900;">4. ÖDƏNİŞ</p><p id="pi4" style="font-size:14px; font-weight:800; color:#00525d;">0</p></div>
+                </div>
+            </div>
+
+            <div style="margin-top:40px; text-align:center; color:#999; font-size:9px;">
+                <p>Bu sənəd məlumatlandırma xarakteri daşıyır.</p>
+                <p>© 2026 Azerbaijan International Maarif Schools</p>
+            </div>
         </div>
     </div>
 
@@ -211,7 +252,6 @@
             calculate();
         }
 
-        // Adi hissə bölgüsü: 4 hissə, tam manat, ilk ödənişlər böyük
         function computeStandardInstallments(totalManat) {
             if (totalManat <= 0) return { i1:0, i2:0, i3:0, i4:0 };
             let total = Math.floor(totalManat);
@@ -222,25 +262,17 @@
             return { i1: parts[0], i2: parts[1], i3: parts[2], i4: parts[3] };
         }
 
-        // Əməkdaş xüsusi qaydası: ilk ödəniş minimum 1350 AZN, qalan 3 hissəyə bölünür
         function computeEmployeeInstallments(totalManat) {
             if (totalManat <= 0) return { i1:0, i2:0, i3:0, i4:0 };
             let total = Math.floor(totalManat);
             const MIN_FIRST = 1350;
-            
-            // Əgər cəmi 1350-dən azdırsa, hamısı ilk ödəniş
-            if (total <= MIN_FIRST) {
-                return { i1: total, i2: 0, i3: 0, i4: 0 };
-            }
-            
+            if (total <= MIN_FIRST) return { i1: total, i2: 0, i3: 0, i4: 0 };
             let first = MIN_FIRST;
             let remaining = total - MIN_FIRST;
-            // Qalan məbləği 3 hissəyə böl (tam manat, ilk qalıq hissəyə)
             let share = Math.floor(remaining / 3);
             let rem = remaining % 3;
             let parts = [share, share, share];
             for (let i = 0; i < rem; i++) parts[i] += 1;
-            
             return { i1: first, i2: parts[0], i3: parts[1], i4: parts[2] };
         }
 
@@ -273,9 +305,8 @@
             
             const food = document.getElementById('foodService').checked ? 1375 : 0;
             let grandTotal = currentVal + food;
-            grandTotal = Math.round(grandTotal); // tam manat
+            grandTotal = Math.round(grandTotal);
             
-            // UI Yeniləmə
             document.getElementById('uiBase').innerText = Math.round(base).toLocaleString('az-AZ') + " AZN";
             const discListUI = document.getElementById('uiDiscountList');
             discListUI.innerHTML = '';
@@ -294,18 +325,13 @@
             
             if (!fullPayCheck.checked && grandTotal > 0) {
                 instPanel.classList.remove('hidden');
-                if (isEmployee) {
-                    installments = computeEmployeeInstallments(grandTotal);
-                } else {
-                    installments = computeStandardInstallments(grandTotal);
-                }
+                if (isEmployee) installments = computeEmployeeInstallments(grandTotal);
+                else installments = computeStandardInstallments(grandTotal);
                 document.getElementById('i1').innerText = installments.i1.toLocaleString('az-AZ') + " AZN";
                 document.getElementById('i2').innerText = installments.i2.toLocaleString('az-AZ') + " AZN";
                 document.getElementById('i3').innerText = installments.i3.toLocaleString('az-AZ') + " AZN";
                 document.getElementById('i4').innerText = installments.i4.toLocaleString('az-AZ') + " AZN";
-            } else {
-                instPanel.classList.add('hidden');
-            }
+            } else instPanel.classList.add('hidden');
             
             document.getElementById('employeeNote').classList.toggle('hidden', !isEmployee);
             
@@ -317,8 +343,8 @@
         
         function generatePdf() {
             const btn = document.getElementById('pdfDownloadBtn');
-            const nameInput = document.getElementById('pdfNameInput').value || "Məlum Deyil";
-            const classInput = document.getElementById('pdfClassInput').value || "Məlum Deyil";
+            const nameInput = document.getElementById('pdfNameInput').value.trim() || "Məlum Deyil";
+            const classInput = document.getElementById('pdfClassInput').value.trim() || "Məlum Deyil";
             btn.disabled = true; btn.innerText = "HAZIRLANIR...";
             
             document.getElementById('pName').innerText = nameInput; 
@@ -343,10 +369,16 @@
                 document.getElementById('pi2').innerText = inst.i2 + " AZN";
                 document.getElementById('pi3').innerText = inst.i3 + " AZN";
                 document.getElementById('pi4').innerText = inst.i4 + " AZN";
-            } else { pInstBox.style.display = 'none'; }
+            } else pInstBox.style.display = 'none';
             
             const element = document.getElementById('pdf-content');
-            html2pdf().from(element).set({ margin: 0.5, filename: `Maarif_Hesabat_${nameInput}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).save().then(() => { btn.disabled = false; btn.innerText = "YÜKLƏ"; closePdfModal(); }).catch(() => { btn.disabled = false; btn.innerText = "YÜKLƏ"; });
+            html2pdf().from(element).set({
+                margin: 0.4,
+                filename: `Maarif_Teklif_${nameInput.replace(/\s/g, '_')}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            }).save().then(() => { btn.disabled = false; btn.innerText = "YÜKLƏ"; closePdfModal(); }).catch(() => { btn.disabled = false; btn.innerText = "YÜKLƏ"; });
         }
         window.onload = () => setCampus('nəsimi');
     </script>
