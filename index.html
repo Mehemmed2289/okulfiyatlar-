@@ -193,7 +193,7 @@
             <div style="margin-bottom:30px; background:#fcfcfc; padding:20px; border:1px solid #eee; border-radius:10px;">
                 <table style="width:100%">
                     <tr>
-                        <td style="width:40%"><span style="font-size:9px; color:#888;">ŞAGİRD:</span><br><span id="pName" style="font-size:14px; font-weight:800;">---</span></td>
+                        <td style="width:40%"><span style="font-size:9px; color:#888;">ŞAGİRD:</span><br><span id="pName" style="font-size:14px; font-weight:800;">---</span><br><span id="pPrice" style="font-size:12px; color:#00525d; font-weight:700; margin-top:5px; display:block;"></span></td>
                         <td style="width:30%"><span style="font-size:9px; color:#888;">SİNİF:</span><br><span id="pClass" style="font-size:14px; font-weight:800;">---</span></td>
                         <td style="width:30%; text-align:right"><span style="font-size:9px; color:#888;">KAMPUS:</span><br><span id="pCampus" style="font-size:14px; font-weight:800;">---</span></td>
                     </tr>
@@ -348,6 +348,7 @@
             btn.disabled = true; btn.innerText = "HAZIRLANIR...";
             
             document.getElementById('pName').innerText = nameInput; 
+            document.getElementById('pPrice').innerText = lastCalculation.grandTotal + " AZN";
             document.getElementById('pClass').innerText = classInput;
             document.getElementById('pCampus').innerText = lastCalculation.campus === 'nəsimi' ? 'NƏSİMİ' : 'GƏNCLİK';
             document.getElementById('pDate').innerText = document.getElementById('currentDate').innerText;
@@ -374,7 +375,7 @@
             const element = document.getElementById('pdf-content');
             html2pdf().from(element).set({
                 margin: 0.4,
-                filename: `Maarif_Teklif_${nameInput.replace(/\s/g, '_')}.pdf`,
+                filename: `${nameInput} qiymət təklifi.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true, letterRendering: true },
                 jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
