@@ -285,7 +285,7 @@
             let pPct = primarySel.value === 'exceptional' ? (parseFloat(document.getElementById('excPercent').value) || 0) : parseFloat(primarySel.value);
             const sibCheck = document.getElementById('siblingDisc');
             const fullPayCheck = document.getElementById('fullPayDisc');
-            const isBlocked = (primarySel.value === "25" || primarySel.value === "exceptional");
+            const isBlocked = (primarySel.value === "25");
             const isEmployee = (primarySel.value === "75" || primarySel.value === "50");
             
             if (isBlocked) {
